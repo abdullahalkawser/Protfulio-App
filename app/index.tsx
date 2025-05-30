@@ -18,7 +18,7 @@ export default function AuthRoutesLayout() {
       router.push('/(tabs)/home')
     }, 9000);
 
-    return () => clearTimeout(timer); // Cleanup function
+    return () => clearTimeout(timer);
   }, []);
 
 

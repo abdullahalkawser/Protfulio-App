@@ -22,7 +22,7 @@ export default function SplashScreen() {
           loop
           style={styles.lottie}
         />
-        <Text style={styles.title}> Welcome tO Abdullah Protfulio</Text>
+        <Text style={styles.title}> Welcome  Abdullah Protfulio</Text>
       </Animated.View>
     </View>
   );
