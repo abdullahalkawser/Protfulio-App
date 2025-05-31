@@ -1,228 +1,374 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, Pressable } from 'react-native';
+import React from 'react';
+
+const categorizedBlogs = {
+  Technology: [
+    {
+      id: 1,
+      title: 'The Rise of AI in Everyday Life',
+      description: 'Explore how AI is shaping daily life, from smart assistants to personalized apps.',
+      image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-30T08:30:00Z',
+      minutesAgo: 45,
+      author: 'Jane Doe',
+      category: 'Technology',
+      readingTime: '6 min read',
+      tags: ['AI', 'Smart Assistants', 'Technology', 'Innovation'],
+      sourceUrl: 'https://example.com/blog/rise-of-ai-in-everyday-life',
+      like: '15k',
+    },
+    {
+      id: 2,
+      title: '5G Technology: What You Need to Know',
+      description: 'Understand the speed, benefits, and concerns of 5G in our connected world.',
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-29T10:15:00Z',
+      minutesAgo: 120,
+      author: 'John Smith',
+      category: 'Technology',
+      readingTime: '5 min read',
+      tags: ['5G', 'Connectivity', 'Speed', 'Technology'],
+      sourceUrl: 'https://example.com/blog/5g-technology-need-to-know',
+            like: '20k',
+    },
+    {
+      id: 3,
+      title: 'The Future of Web Development',
+      description: 'A look at trends like Jamstack, serverless, and modern JS frameworks.',
+      image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-28T14:45:00Z',
+      minutesAgo: 180,
+      author: 'Emily Clark',
+      category: 'Technology',
+      readingTime: '7 min read',
+      tags: ['Web Development', 'Jamstack', 'Serverless', 'JavaScript'],
+      sourceUrl: 'https://example.com/blog/future-of-web-development',
+    },
+  ],
+  
+  'Social Science': [
+    {
+      id: 4,
+      title: 'Cybersecurity in 2025',
+      description: 'Learn about rising threats and how to protect your digital identity.',
+      image: 'https://images.unsplash.com/photo-1503424886303-6f6d18a62a98?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-27T09:30:00Z',
+      minutesAgo: 240,
+      author: 'Alex Johnson',
+      category: 'Social Science',
+      readingTime: '8 min read',
+      tags: ['Cybersecurity', 'Threats', 'Privacy', 'Digital Identity'],
+      sourceUrl: 'https://example.com/blog/cybersecurity-2025',
+    },
+    {
+      id: 6,
+      title: 'Blockchain Beyond Crypto',
+      description: 'Explore blockchain in healthcare, voting systems, and supply chains.',
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-26T13:00:00Z',
+      minutesAgo: 300,
+      author: 'Maria Lopez',
+      category: 'Social Science',
+      readingTime: '9 min read',
+      tags: ['Blockchain', 'Healthcare', 'Voting', 'Supply Chain'],
+      sourceUrl: 'https://example.com/blog/blockchain-beyond-crypto',
+    },
+  ],
+  'Tech Career & Guidelines': [
+    {
+      id: 5,
+      title: 'The Impact of Quantum Computing',
+      description: 'Quantum computing could revolutionize finance, healthcare, and more.',
+      image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-25T16:20:00Z',
+      minutesAgo: 360,
+      author: 'Daniel Kim',
+      category: 'Tech Career & Guidelines',
+      readingTime: '10 min read',
+      tags: ['Quantum Computing', 'Finance', 'Healthcare', 'Technology'],
+      sourceUrl: 'https://example.com/blog/impact-quantum-computing',
+    },
+    {
+      id: 7,
+      title: 'The Rise of Edge Computing',
+      description: 'Faster data processing at the edge is changing the internet.',
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-24T11:50:00Z',
+      minutesAgo: 420,
+      author: 'Sophia Martinez',
+      category: 'Tech Career & Guidelines',
+      readingTime: '7 min read',
+      tags: ['Edge Computing', 'Data Processing', 'Internet', 'Technology'],
+      sourceUrl: 'https://example.com/blog/rise-edge-computing',
+    },
+  ],
+  'AI & ML': [
+    {
+      id: 8,
+      title: 'AI in Healthcare',
+      description: 'Machine learning is transforming diagnostics and patient care.',
+      image: 'https://images.unsplash.com/photo-1581093588401-7bb1a0bc3c70?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-23T15:30:00Z',
+      minutesAgo: 480,
+      author: 'Olivia Brown',
+      category: 'AI & ML',
+      readingTime: '8 min read',
+      tags: ['AI', 'Healthcare', 'Machine Learning', 'Diagnostics'],
+      sourceUrl: 'https://example.com/blog/ai-in-healthcare',
+    },
+    {
+      id: 9,
+      title: 'ML Algorithms Explained',
+      description: 'An introduction to popular machine learning algorithms and their applications.',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-22T10:10:00Z',
+      minutesAgo: 540,
+      author: 'Liam Wilson',
+      category: 'AI & ML',
+      readingTime: '9 min read',
+      tags: ['Machine Learning', 'Algorithms', 'Data Science', 'AI'],
+      sourceUrl: 'https://example.com/blog/ml-algorithms-explained',
+    },
+  ],
+  'Software Engineering': [
+    {
+      id: 10,
+      title: 'Agile Methodologies in 2025',
+      description: 'How Agile practices continue to evolve in software development.',
+      image: 'https://images.unsplash.com/photo-1581093588401-7bb1a0bc3c70?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-21T08:00:00Z',
+      minutesAgo: 600,
+      author: 'Ethan Davis',
+      category: 'SOFTWARE ENGINEERING',
+      readingTime: '7 min read',
+      tags: ['Agile', 'Software Development', 'Project Management', 'Scrum'],
+      sourceUrl: 'https://example.com/blog/agile-methodologies-2025',
+    },
+    {
+      id: 11,
+      title: 'Code Review Best Practices',
+      description: 'Improving code quality through effective code reviews.',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-20T12:00:00Z',
+      minutesAgo: 660,
+      author: 'Mia Green',
+      category: 'SOFTWARE ENGINEERING',
+      readingTime: '5 min read',
+      tags: ['Code Review', 'Best Practices', 'Software Quality', 'Collaboration'],
+      sourceUrl: 'https://example.com/blog/code-review-best-practices',
+    },
+  ],
+  'Guiding Tech Career': [
+    {
+      id: 12,
+      title: 'Building a Career in AI',
+      description: 'Steps and skills needed to succeed in AI career paths.',
+      image: 'https://images.unsplash.com/photo-1581093588401-7bb1a0bc3c70?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-19T14:00:00Z',
+      minutesAgo: 720,
+      author: 'Sophia Reed',
+      category: 'GUIDING TECH CAREER',
+      readingTime: '8 min read',
+      tags: ['Career', 'AI', 'Skills', 'Technology'],
+      sourceUrl: 'https://example.com/blog/building-career-ai',
+    },
+    {
+      id: 13,
+      title: 'Resume Tips for Software Engineers',
+      description: 'Craft a standout resume for tech jobs and internships.',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+      publishedAt: '2025-05-18T09:30:00Z',
+      minutesAgo: 780,
+      author: 'Noah Miller',
+      category: 'GUIDING TECH CAREER',
+      readingTime: '6 min read',
+      tags: ['Resume', 'Software Engineer', 'Job Search', 'Career Tips'],
+      sourceUrl: 'https://example.com/blog/resume-tips-software-engineers',
+    },
+  ],
+    ' Competitive Programming & DS': [
+  {
+    id: 14,
+    title: 'Why Competitive Programming Matters',
+    description: 'Understand how competitive programming improves problem-solving and coding skills.',
+    image: 'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=600&q=80',
+    publishedAt: '2025-05-29T16:00:00Z',
+    minutesAgo: 90,
+    author: 'Arif Hasan',
+    category: 'Competitive Programming & DS',
+    readingTime: '7 min read',
+    tags: ['Competitive Programming', 'Problem Solving', 'Coding Skills', 'Algorithms'],
+    sourceUrl: 'https://example.com/blog/why-competitive-programming-matters',
+  },
+  {
+    id: 15,
+    title: 'The Importance of Data Structures',
+    description: 'Learn why mastering data structures is crucial for efficient programming.',
+    image: 'https://images.unsplash.com/photo-1505682634904-d7c65bd15c87?auto=format&fit=crop&w=600&q=80',
+    publishedAt: '2025-05-28T11:30:00Z',
+    minutesAgo: 180,
+    author: 'Fatima Khan',
+    category: 'Competitive Programming & DS',
+    readingTime: '8 min read',
+    tags: ['Data Structures', 'Algorithms', 'Efficiency', 'Programming'],
+    sourceUrl: 'https://example.com/blog/importance-of-data-structures',
+        like:'20k'
+  },
+  {
+    id: 16,
+    title: 'Top 10 Data Structures Every Programmer Should Know',
+    description: 'A guide to essential data structures with examples and use cases.',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80',
+    publishedAt: '2025-05-27T14:45:00Z',
+    minutesAgo: 240,
+    author: 'Rahim Uddin',
+    category: 'Competitive Programming & DS',
+    readingTime: '10 min read',
+    tags: ['Data Structures', 'Programming', 'Guide', 'Algorithms'],
+    sourceUrl: 'https://example.com/blog/top-data-structures-every-programmer',
+    like:'200k',
+  },
+  ],
+};
 
 const Blog = () => {
-  const [selectedPost, setSelectedPost] = useState(null);
-
-  const data = {
-    Technology: [
-      {
-        title: 'AI advancements in 2025',
-        content:
-          'Artificial Intelligence continues to evolve rapidly. In 2025, we expect breakthroughs in general AI, natural language understanding, and AI ethics...',
-        image:
-          'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=60',
-      },
-      {
-        title: 'Top 10 JavaScript frameworks',
-        content:
-          'JavaScript frameworks keep evolving. React, Vue, Angular lead the market, but new contenders like Svelte and SolidJS are gaining attention...',
-        image:
-          'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=60',
-      },
-         {
-        title: 'Top 10 JavaScript frameworks',
-        content:
-          'JavaScript frameworks keep evolving. React, Vue, Angular lead the market, but new contenders like Svelte and SolidJS are gaining attention...',
-        image:
-          'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=60',
-      },
-         {
-        title: 'Top 10 JavaScript frameworks',
-        content:
-          'JavaScript frameworks keep evolving. React, Vue, Angular lead the market, but new contenders like Svelte and SolidJS are gaining attention...',
-        image:
-          'https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=60',
-      },
-      // add more posts
-    ],
-    'Social Science': [
-      {
-        title: 'Impact of social media on youth',
-        content:
-          'Social media has changed the way young people interact and communicate. While it offers opportunities, it also creates challenges for mental health...',
-        image:
-          'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=800&q=60',
-      },
-      // add more posts
-    ],
-    'Software Engineering Guidelines': [
-      {
-        title: 'Clean code principles',
-        content:
-          'Clean code is essential for maintainability. Key principles include meaningful names, small functions, and avoiding duplication...',
-        image:
-          'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60',
-      },
-      // add more posts
-    ],
-    'Career Development': [
-      {
-        title: 'How to build a tech portfolio',
-        content:
-          'A strong portfolio showcases your skills and projects. Use GitHub, personal websites, and blogs to highlight your work...',
-        image:
-          'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=60',
-      },
-      // add more posts
-    ],
-  };
-
-  const categories = Object.keys(data);
-
-  // Blog list view with cards
-  const renderBlogList = () => (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>📚 Blog</Text>
-
-      {categories.map((category) => (
-        <View key={category} style={styles.categoryContainer}>
-          <Text style={styles.categoryTitle}>{category}</Text>
-          {data[category].map((post, idx) => (
-            <TouchableOpacity
-              key={idx}
-              style={styles.card}
-              activeOpacity={0.8}
-              onPress={() => setSelectedPost({ ...post, category })}
+  return (
+    <ScrollView horizontal={false} showsHorizontalScrollIndicator={false} style={styles.outerScroll}>
+      <View style={styles.container}>
+        <Text style={styles.mainHeader}>🚀 Trending Tech Blogs</Text>
+        {Object.entries(categorizedBlogs).map(([category, blogs]) => (
+          <View key={category} style={styles.section}>
+            <Text style={styles.sectionHeader}>{category}</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.scrollContent}
             >
-              <Image source={{ uri: post.image }} style={styles.cardImage} />
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{post.title}</Text>
-                <Text style={styles.cardCategory}>{category}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
+              {blogs.map((blog) => (
+                <Pressable
+                  key={blog.id}
+                  style={({ pressed }) => [styles.card, pressed && styles.pressedCard]}
+                  onPress={() => console.log(`Opening blog: ${blog.sourceUrl}`)}
+                >
+                  <Image source={{ uri: blog.image }} style={styles.image} />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title} numberOfLines={2}>{blog.title}</Text>
+                    <Text style={styles.description} numberOfLines={3} ellipsizeMode="tail">
+                      {blog.description}
+                    </Text>
+                    <View style={styles.bottomRow}>
+                      <Text style={styles.like}>❤️ {blog.like || '0'}</Text>
+                      <Text style={styles.readingTime}>{blog.readingTime}</Text>
+                    </View>
+                    <Text style={styles.timeAgo}>{blog.minutesAgo} minutes ago</Text>
+                  </View>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
-
-  // Detailed post view
-  const renderPostDetail = () => (
-    <View style={styles.detailContainer}>
-      <TouchableOpacity onPress={() => setSelectedPost(null)} style={styles.backButton}>
-        <Text style={styles.backButtonText}>← Back to Blog</Text>
-      </TouchableOpacity>
-
-      <Image source={{ uri: selectedPost.image }} style={styles.detailImage} />
-      <Text style={styles.detailCategory}>{selectedPost.category}</Text>
-      <Text style={styles.detailTitle}>{selectedPost.title}</Text>
-      <ScrollView style={styles.detailContentContainer}>
-        <Text style={styles.detailContent}>{selectedPost.content}</Text>
-      </ScrollView>
-    </View>
-  );
-
-  return selectedPost ? renderPostDetail() : renderBlogList();
 };
 
 const styles = StyleSheet.create({
+  outerScroll: {
+    backgroundColor: '#fff',
+  },
   container: {
-    padding: 20,
-    backgroundColor: '#0f172a',
-    marginTop:30,
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor: '#121212',
+    paddingTop: 50,
+    paddingBottom: 30,
   },
-  heading: {
+  mainHeader: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#38bdf8',
-    marginBottom: 20,
-    textAlign: 'center',
+    fontWeight: '900',
+    marginLeft: 20,
+    marginBottom: 24,
+    color: '#f0e6ff',
   },
-  categoryContainer: {
+  section: {
     marginBottom: 30,
   },
-  categoryTitle: {
+  sectionHeader: {
     fontSize: 22,
-    fontWeight: '700',
-    color: '#60a5fa',
-    marginBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#2563eb',
-    paddingBottom: 6,
+    fontWeight: '800',
+    marginLeft: 20,
+    marginBottom: 12,
+    color: 'white',
   },
-
+  scrollContent: {
+    paddingLeft: 20,
+    paddingRight: 12,
+  },
   card: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    marginBottom: 15,
+    width: 230,
+    marginRight: 16,
+    padding: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 16,
     overflow: 'hidden',
-    shadowColor: '#2563eb',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    elevation: 5,
-    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
-  cardImage: {
-    width: 100,
-    height: 100,
+  pressedCard: {
+    transform: [{ scale: 0.96 }],
+    opacity: 0.85,
   },
-  cardContent: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'center',
-  },
-  cardTitle: {
-    color: '#e0e7ff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  cardCategory: {
-    color: '#93c5fd',
-    fontSize: 14,
-  },
-
-  detailContainer: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-    padding: 20,
-  },
-  backButton: {
-    marginBottom: 15,
-  },
-  backButtonText: {
-    color: '#60a5fa',
-    fontSize: 16,
-    marginTop:30,
-    fontWeight: '600',
-  },
-  detailImage: {
+  image: {
     width: '100%',
-    height: 200,
+    height: 130,
     borderRadius: 12,
-    marginBottom: 15,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#333',
   },
-  detailCategory: {
-    fontSize: 18,
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: 'white',
+    marginBottom: 6,
+  },
+  description: {
+    fontSize: 13.5,
+    color: 'white',
+    lineHeight: 18,
+    marginBottom: 8,
+  },
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  like: {
+    color: 'green',
     fontWeight: '600',
-    color: '#38bdf8',
-    marginBottom: 5,
+    fontSize: 13,
   },
-  detailTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 20,
+  readingTime: {
+    color: '#d4d4d4',
+    fontSize: 13,
   },
-  detailContentContainer: {
-    flexGrow: 1,
-  },
-  detailContent: {
-    fontSize: 16,
-    color: '#e0e7ff',
-    lineHeight: 24,
-    textAlign: 'justify',
+  timeAgo: {
+    marginTop: 4,
+    color: '#a1a1aa',
+    fontSize: 12,
   },
 });
 
 export default Blog;
+
+export default Blog;
+
+

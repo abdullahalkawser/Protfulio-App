@@ -16,7 +16,7 @@ export default function AuthRoutesLayout() {
     const timer = setTimeout(() => {
       setIsShowSplashScreen(false);
       router.push('/(tabs)/home')
-    }, 9000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
