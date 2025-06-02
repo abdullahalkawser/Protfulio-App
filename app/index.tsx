@@ -3,7 +3,6 @@
 import SplashScreen from '@/components/splashScreen';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Text } from 'react-native';
 
 
 
@@ -16,7 +15,7 @@ export default function AuthRoutesLayout() {
     const timer = setTimeout(() => {
       setIsShowSplashScreen(false);
       router.push('/(tabs)/home')
-    }, 1000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
